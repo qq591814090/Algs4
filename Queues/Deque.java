@@ -34,7 +34,7 @@ public class Deque<Item> implements Iterable<Item>
               this.next = nx;
             }
             private void setItem(Item input){
-                this.Item = input;
+                this.item = input;
             }   
             private Item returnItem(){
                 return this.item;
@@ -61,7 +61,7 @@ public class Deque<Item> implements Iterable<Item>
    
    public boolean isEmpty()           // is the deque empty?
    {
-       return first.returnNext().returnItem == null;
+       return first.returnNext().returnItem() == null;
    }
    
    public int size()                  // return the number of items on the deque
@@ -100,18 +100,12 @@ public class Deque<Item> implements Iterable<Item>
           throw new NoSuchElementException("It is empty already.");
        }
        
-       Node temp = first;
-       first = first.next;
-       
-       if(isEmpty())
-       {
-           last = null;
-       } else
-       {
-       first.previous = null;
-       }
+       Node temp = first.returnNext().returnNext();
+       Node output = first.returnNext();
+       first.setNext(temp);
+       temp.setPrevious(first);
        count --;
-       return temp.item;
+       return output.item;
    }
    
    
@@ -121,18 +115,12 @@ public class Deque<Item> implements Iterable<Item>
        {
           throw new NoSuchElementException("It is empty already.");
        }
-       Node temp = last;
-        if(count == 1)
-       {
-           last = null;
-           first = null;
-       } else
-       {
-       last = last.previous;
-       last.next = null;
-       }
+       Node temp = last.returnPrevious().returnPrevious();
+       Node output = last.returnPrevious();
+       last.setPrevious(temp);
+       temp.setNext(last);
        count --;
-       return temp.item;
+       return output.item;
    }
    public Iterator<Item> iterator()   // return an iterator over items in order from front to end
    {
@@ -143,17 +131,17 @@ public class Deque<Item> implements Iterable<Item>
    {
        private Node current = first;
        
-       public boolean hasNext() { return current != null;}
+       public boolean hasNext() { return current.returnNext().returnItem() != null;}
        
        public void remove() { throw new UnsupportedOperationException("Not supported"); }
            
        public Item next() 
        {
-           if ( current == null) 
+           if ( current.returnNext().returnItem() == null) 
            {
                throw new NoSuchElementException("No such an element!");
            }
-           Item item = current.item;
+           Item item = current.returnNext().returnItem();
            current = current.next;
            return item;
        }
