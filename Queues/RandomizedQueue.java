@@ -1,3 +1,4 @@
+import java.util.*;
 public class RandomizedQueue<Item> implements Iterable<Item> 
 {
    private Item[] a;
@@ -31,7 +32,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
    public void enqueue(Item item)     // add the item
    {
-     if (N == a.length) resize(2*length);
+     if (N == a.length) resize(2*a.length);
      a[N++] = item;  
    }
 
@@ -48,7 +49,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     a[N-1] =null;
     N--;
     if (N>0&&N == a.length/4) resize(a.length/2);
-    reutrn item;
+    return item;
    }
    public Item sample()               // return (but do not delete) a random item
    {
@@ -56,7 +57,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     int rd = StdRandom.uniform(0,N);
     Item item = a[rd];
 
-    reutrn item;
+    return item;
    }
    public Iterator<Item> iterator()   // return an independent iterator over items in random order
    {
@@ -64,22 +65,25 @@ public class RandomizedQueue<Item> implements Iterable<Item>
    }
    private class QueueIterator implements Iterator<Item>
    { 
-     private int[] order = new int[N];
+      private int[] order = new int[N];
+      private int current = 0;
    
-     private void QueueIterator(){
+      public QueueIterator()
+      {
          for(int index = 0; index < N; index++ )
          {
              order[index] = index;
          }
          StdRandom.shuffle(order);
-     }
+      }
      
-     private int current = 0;
+ 
 
-     public boolean hasNext(){ return current<N;}
+      public boolean hasNext(){ return current<N;}
      
-     public void remove() { throw new UnsupportedOperationException("Not supported"); }
-     
+      public void remove() {
+            throw new UnsupportedOperationException();
+      }
      public Item next()
      {
         if (hasNext()) 
