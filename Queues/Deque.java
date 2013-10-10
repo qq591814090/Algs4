@@ -1,5 +1,5 @@
-import java.lang.*;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> 
 {
@@ -9,9 +9,9 @@ public class Deque<Item> implements Iterable<Item>
     
     private class Node
     {
-        Item item;
-        Node previous;
-        Node next;
+        private Item item;
+        private Node previous;
+        private Node next;
             private Node(Item input)
             {
                 this.item = input;
@@ -25,24 +25,33 @@ public class Deque<Item> implements Iterable<Item>
                 this.previous = null;
                 this.next = null;
             }
+            
             private void setPrevious(Node pr)
             {
               this.previous = pr;
             }
+            
             private void setNext(Node nx)
             {
               this.next = nx;
             }
-            private void setItem(Item input){
+            
+            private void setItem(Item input)
+            {
                 this.item = input;
             }   
-            private Item returnItem(){
+            private Item returnItem()
+            {
                 return this.item;
             }
-            private Node returnNext(){
+            
+            private Node returnNext()
+            {
                 return this.next;
             }
-            private Node returnPrevious(){
+            
+            private Node returnPrevious()
+            {
                 return this.previous;
             }
     }
@@ -78,19 +87,20 @@ public class Deque<Item> implements Iterable<Item>
        newNode.setPrevious(first);
        temp.setPrevious(newNode);
        newNode.setNext(temp);
-       count ++;      
+       count++;      
    }
    
           
    public void addLast(Item item)     // insert the item at the end
    {
        if (item == null) { throw new NullPointerException("NULL"); }
-       Node temp = last.returnNext();
+       Node temp = last.returnPrevious();
        Node newNode = new Node(item);
        last.setPrevious(newNode);
        newNode.setPrevious(temp);
        temp.setNext(newNode);
-       count ++;  
+       newNode.setNext(last);
+       count++;  
    }
          
    public Item removeFirst()          // delete and return the item at the front
@@ -104,7 +114,7 @@ public class Deque<Item> implements Iterable<Item>
        Node output = first.returnNext();
        first.setNext(temp);
        temp.setPrevious(first);
-       count --;
+       count--;
        return output.item;
    }
    
@@ -119,7 +129,7 @@ public class Deque<Item> implements Iterable<Item>
        Node output = last.returnPrevious();
        last.setPrevious(temp);
        temp.setNext(last);
-       count --;
+       count--;
        return output.item;
    }
    public Iterator<Item> iterator()   // return an iterator over items in order from front to end
@@ -131,13 +141,19 @@ public class Deque<Item> implements Iterable<Item>
    {
        private Node current = first;
        
-       public boolean hasNext() { return current.returnNext().returnItem() != null;}
+       public boolean hasNext()
+      {
+        return current.returnNext().returnItem() != null;
+      }
        
-       public void remove() { throw new UnsupportedOperationException("Not supported"); }
+       public void remove() 
+      { 
+        throw new UnsupportedOperationException("Not supported"); 
+      }
            
        public Item next() 
        {
-           if ( current.returnNext().returnItem() == null) 
+           if (!hasNext()) 
            {
                throw new NoSuchElementException("No such an element!");
            }
@@ -146,25 +162,5 @@ public class Deque<Item> implements Iterable<Item>
            return item;
        }
    }
-   public static void main(String[] args){ 
-       Deque<String> test = new Deque<String>();
-       test.addFirst("s");
-       test.addFirst("u");
-       test.addFirst("p");
-       test.addFirst("e");
-       test.addFirst("r");
-       test.addFirst("m");
-       test.addFirst("a");
-       test.addFirst("n");
-       
-       /*for(String s : test)*/
-       System.out.println(test.removeFirst());
-       System.out.println(test.removeFirst());
-       System.out.println(test.removeFirst());
-       System.out.println(test.removeFirst());
-       System.out.println(test.removeFirst());
-       System.out.println(test.removeFirst());
-       
-       
-   }      
+    
 }

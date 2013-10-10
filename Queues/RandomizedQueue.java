@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 public class RandomizedQueue<Item> implements Iterable<Item> 
 {
    private Item[] a;
@@ -23,7 +25,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
    {
        assert capacity >= N;
        Item[] temp = (Item[]) new Object[capacity];
-       for (int i = 0; i< N;i++)
+       for (int i = 0; i < N; i++)
        {
         temp[i] = a[i];
        }
@@ -32,6 +34,8 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
    public void enqueue(Item item)     // add the item
    {
+    if (item == null) { throw new NullPointerException("NULL"); }
+       
 
      if (N == a.length) resize(2*a.length);
      a[N] = item; 
@@ -44,7 +48,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
    {
     if (isEmpty()) throw new NoSuchElementException("RandomizedQueue underflow");
     
-    int rd = StdRandom.uniform(0,N);
+    int rd = StdRandom.uniform(0, N);
 
     Item item = a[rd];
     if (rd != N-1)
@@ -54,14 +58,14 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
     a[N-1] = null;
     N--;
-    if (N>0&&N == a.length/4) resize(a.length/2);
+    if (N > 0 && N == a.length/4) resize(a.length/2);
 
     return item;
    }
    public Item sample()               // return (but do not delete) a random item
    {
     if (isEmpty()) throw new NoSuchElementException("RandomizedQueue underflow");
-    int rd = StdRandom.uniform(0,N);
+    int rd = StdRandom.uniform(0, N);
     Item item = a[rd];
 
     return item;
@@ -96,7 +100,8 @@ public class RandomizedQueue<Item> implements Iterable<Item>
         if (hasNext()) 
         {
             current ++;
-            return a[order[current]];
+            return a[order[current-1]];
+            
         }
         else
         {
