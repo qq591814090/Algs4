@@ -2,7 +2,7 @@ import java.util.*;
 public class RandomizedQueue<Item> implements Iterable<Item> 
 {
    private Item[] a;
-   private int N;
+   private int N = 0;
  
    public RandomizedQueue()           // construct an empty randomized queue
    {    
@@ -25,15 +25,19 @@ public class RandomizedQueue<Item> implements Iterable<Item>
        Item[] temp = (Item[]) new Object[capacity];
        for (int i = 0; i< N;i++)
        {
-        temp[i] = a[i];;
+        temp[i] = a[i];
        }
        a = temp;
    }
 
    public void enqueue(Item item)     // add the item
    {
+
      if (N == a.length) resize(2*a.length);
-     a[N++] = item;  
+     a[N] = item; 
+
+     N++; 
+
    }
 
    public Item dequeue()              // delete and return a random item
@@ -41,14 +45,17 @@ public class RandomizedQueue<Item> implements Iterable<Item>
     if (isEmpty()) throw new NoSuchElementException("RandomizedQueue underflow");
     
     int rd = StdRandom.uniform(0,N);
+
     Item item = a[rd];
     if (rd != N-1)
     {
       a[rd] = a[N-1];
     }
-    a[N-1] =null;
+
+    a[N-1] = null;
     N--;
     if (N>0&&N == a.length/4) resize(a.length/2);
+
     return item;
    }
    public Item sample()               // return (but do not delete) a random item
